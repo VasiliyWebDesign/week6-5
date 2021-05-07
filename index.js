@@ -1,35 +1,9 @@
- app
- 
- 
-    .all('/req/', (req, res) => {
-        const addr = req.method === 'POST' ? req.body.addr : req.query.addr;
+import express from 'express';
+import bodyParser from 'body-parser';
+import fs from 'fs';
+import crypto from 'crypto';
+import http from 'http';
 
-        http.get(addr, (r, b = '') => {
-            r
-            .on('data', d => b += d)
-            .on('end', () => res.send(b));
-        });
-    })
- 
-
-    })
-    .get('/login/', (req, res) => res.send(LOGIN || 'goss'))  
-    .get('/sha1/:input', r => {
-        const shasum = crypto.createHash('sha1');
-        shasum.update(r.params.input);
-        r.res.send(shasum.digest('hex')); 
-    })
-       
-  
-    .get('/code/', (req, res) => {
-        res.set({ 'Content-Type': 'text/plain; charset=utf-8' });
-        createReadStream(path).pipe(res);
-    })
-    
-  
- 
-   
-   
-   
-    return app;
-}
+import appSrc from './app.js';
+const app = appSrc(express, bodyParser, fs, crypto, http);
+app.listen(process.env.PORT);
